@@ -32,12 +32,19 @@ h1 {
   gap: 30px;
 }
 
-.clicker {
+.start-button {
+  font-size: 2rem;
+  font-weight: 600;
+  padding: 10px;
+  border: 5px solid;
+  border-color: $color-white;
+  border-radius: 10px;
+  transition: color 0.3s, border-color 0.3s;
   cursor: pointer;
-  transition: color 0.3s;
 
   &:hover {
     color: $color-green;
+    border-color: $color-green;
   }
 }
 

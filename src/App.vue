@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
-    <h1
+    <span
       v-if="!appStore.isListening"
       @click="appStore.start"
-      class="clicker"
+      class="start-button"
     >
       Click to start
-    </h1>
+    </span>
 
     <div v-if="appStore.isListening" class="inner">
       <div
