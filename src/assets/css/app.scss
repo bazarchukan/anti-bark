@@ -1,0 +1,67 @@
+@import 'variables.scss';
+@import 'visualizer.scss';
+@import 'limiter.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #app, .wrapper {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-black;
+  color: $color-white;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.clicker {
+  cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: $color-green;
+  }
+}
+
+.visual-box {
+  position: relative;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.mute-button {
+  width: 50px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &_muted {
+    background-color: $color-red;
+  }
+
+  &_unmuted {
+    background-color: $color-green;
+  }
+}
