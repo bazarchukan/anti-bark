@@ -1,14 +1,6 @@
 <template>
-  <div class="wrapper">
-    <span
-      v-if="!appStore.isListening"
-      @click="appStore.start"
-      class="start-button"
-    >
-      Click to start
-    </span>
-
-    <div v-if="appStore.isListening" class="inner">
+  <div class="container">
+    <template v-if="appStore.isListening">
       <div
         :style="{ height: `${MAX_FREQUENCY_VALUE}px` }"
         class="visual-box"
@@ -20,17 +12,17 @@
         <limiter />
       </div>
 
-      <div class="buttons">
-        <button
-          :class="{ 'mute-button_muted': appStore.isMuted, 'mute-button_unmuted': !appStore.isMuted }"
-          @click="appStore.toggleMute"
-          class="mute-button"
-        >
-          <mute-icon v-if="appStore.isMuted" />
-          <unmute-icon v-else />
-        </button>
-      </div>
-    </div>
+      <button
+        :class="{ 'mute-button_muted': appStore.isMuted, 'mute-button_unmuted': !appStore.isMuted }"
+        @click="appStore.toggleMute"
+        class="mute-button"
+      >
+        <mute-icon v-if="appStore.isMuted" />
+        <unmute-icon v-else />
+      </button>
+    </template>
+
+    <span v-else @click="appStore.start" class="start-button">Click to start</span>
   </div>
 </template>
 
