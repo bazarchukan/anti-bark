@@ -8,7 +8,7 @@ const initState = (): AppState => ({
   isListening: false,
   isMuted: false,
   limit: MAX_FREQUENCY_VALUE,
-  frequencyList: [],
+  microphone: null,
   audio: null
 });
 
@@ -16,38 +16,28 @@ export const useAppStore = defineStore('app', {
   state: initState,
   
   actions: {
-    start() {
-      this.listen();
-      this.react();
+    async start() {
+      try {
+        const { microphone } = await useMicrophone();
+        const { audio } = useAudio();
+        this.microphone = microphone;
+        this.audio = audio;
+  
+        this.isListening = true;
+        this.listen();
+      } catch (error: any) {
+        alert(error.message);
+      }
     },
 
-    async listen() {
-      const { getFrequencyData } = await useMicrophone();
+    listen() {
+      this.microphone?.refreshFrequencyData();
 
-      this.isListening = true;
-
-      const loop = () => {
-        window.requestAnimationFrame(loop);
-
-        this.frequencyList = [... getFrequencyData()];
+      if (this.isLimitOver) {
+        this.audio!.play();
       }
 
-      loop();
-    },
-
-    react() {
-      const { audio } = useAudio();
-      this.audio = audio;
-
-      const loop = () => {
-        window.requestAnimationFrame(loop);
-
-        if (this.isLimitOver) {
-          this.audio!.play();
-        }
-      }
-
-      loop();
+      window.requestAnimationFrame(this.listen);
     },
 
     toggleMute() {
@@ -57,8 +47,8 @@ export const useAppStore = defineStore('app', {
   },
 
   getters: {
-    isLimitOver(): boolean {
-      return this.frequencyList.some(frequency => frequency >= this.limit);
+    isLimitOver(): boolean {            
+      return this.microphone!.frequencyData.some(frequency => frequency >= this.limit);
     }
   }
 });

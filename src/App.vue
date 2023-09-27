@@ -22,7 +22,7 @@
       </button>
     </template>
 
-    <span v-else @click="appStore.start" class="start-button">Click to start</span>
+    <button v-else @click="appStore.start" class="start-button">Click to listen</button>
   </div>
 </template>
 
