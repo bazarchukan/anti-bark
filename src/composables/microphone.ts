@@ -20,10 +20,9 @@ export async function useMicrophone() {
     frequencyData: [],
     refreshFrequencyData: function() {
       analyser.getByteFrequencyData(frequencyData);
-
       this.frequencyData = [... frequencyData]
-    }
-  };
+  }
+};
 
-  return { microphone };
+  return microphone;
 }

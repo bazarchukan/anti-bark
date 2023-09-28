@@ -22,11 +22,12 @@
       </button>
     </template>
 
-    <button v-else @click="appStore.start" class="start-button">Click to listen</button>
+    <button v-else @click="appStore.listen" class="start-button">Click to listen</button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue';
 import { useAppStore } from '@/store/app';
 import { MAX_FREQUENCY_VALUE } from '@/types/constants';
 import Visualizer from '@/components/Visualizer.vue';
@@ -35,4 +36,17 @@ import MuteIcon from '@/assets/icons/mute.svg';
 import UnmuteIcon from '@/assets/icons/unmute.svg';
 
 const appStore = useAppStore();
+
+watch(
+  () => appStore.microphone?.frequencyData,
+  () => {
+    if (appStore.isLimitOver && !appStore.isMuted && !appStore.isThrottled) {
+      appStore.isThrottled = true;
+
+      appStore.play();
+
+      setTimeout(() => appStore.isThrottled = false, 5000);
+    }
+  }
+)
 </script>

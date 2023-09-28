@@ -7,48 +7,42 @@ import { useAudio } from "@/composables/audio";
 const initState = (): AppState => ({
   isListening: false,
   isMuted: false,
+  isThrottled: false,
   limit: MAX_FREQUENCY_VALUE,
   microphone: null,
-  audio: null
+  audio: useAudio()
 });
 
 export const useAppStore = defineStore('app', {
   state: initState,
   
   actions: {
-    async start() {
+    async listen() {
       try {
-        const { microphone } = await useMicrophone();
-        const { audio } = useAudio();
-        this.microphone = microphone;
-        this.audio = audio;
-  
+        this.microphone = await useMicrophone();
+
         this.isListening = true;
-        this.listen();
+          
+        setInterval(() => {
+          this.microphone?.refreshFrequencyData();
+        })
       } catch (error: any) {
         alert(error.message);
       }
     },
 
-    listen() {
-      this.microphone?.refreshFrequencyData();
-
-      if (this.isLimitOver) {
-        this.audio!.play();
-      }
-
-      window.requestAnimationFrame(this.listen);
+    play() {      
+      this.audio.play();
     },
 
     toggleMute() {
       this.isMuted = !this.isMuted;
-      this.audio!.muted = this.isMuted;
     }
   },
 
   getters: {
     isLimitOver(): boolean {            
-      return this.microphone!.frequencyData.some(frequency => frequency >= this.limit);
+      return !!this.microphone?.frequencyData.some(frequency => frequency >= this.limit);
     }
   }
 });
