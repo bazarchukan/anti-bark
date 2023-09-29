@@ -35,7 +35,7 @@ const onMove = (event: MouseEvent | TouchEvent) => {
   
   const visualBox = document.querySelector('.visual-box') as HTMLElement; 
 
-  const newLimit = visualBox.offsetHeight + visualBox.offsetTop - y;  
+  const newLimit = visualBox.offsetHeight + visualBox.offsetTop - y!;  
 
   if (newLimit < MIN_FREQUENCY_VALUE || newLimit > MAX_FREQUENCY_VALUE) {
     return;
