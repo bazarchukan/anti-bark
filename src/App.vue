@@ -1,13 +1,8 @@
 <template>
   <div class="container">
     <template v-if="appStore.isListening">
-      <div
-        :style="{ height: `${MAX_FREQUENCY_VALUE}px` }"
-        class="visual-box"
-      >
-        <Suspense>
-          <visualizer />
-        </Suspense>
+      <div :style="{ height: `${MAX_FREQUENCY_VALUE}px` }" class="visual-box">
+        <visualizer />
 
         <limiter />
       </div>
@@ -20,33 +15,28 @@
         <mute-icon v-if="appStore.isMuted" />
         <unmute-icon v-else />
       </button>
+
+      <ui-kit-select
+        :model-value="appStore.sound"
+        :options="soundOptions"
+        @update:model-value="appStore.changeSound"
+      />
     </template>
 
-    <button v-else @click="appStore.listen" class="start-button">Click to listen</button>
+    <button v-else @click="appStore.start" class="start-button">Click to start</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
 import { useAppStore } from '@/store/app';
-import { MAX_FREQUENCY_VALUE } from '@/types/constants';
+import { MAX_FREQUENCY_VALUE, SOUNDS } from '@/types/constants';
 import Visualizer from '@/components/Visualizer.vue';
 import Limiter from '@/components/Limiter.vue';
+import UiKitSelect from '@/components/UiKit/UiKitSelect.vue';
 import MuteIcon from '@/assets/icons/mute.svg';
 import UnmuteIcon from '@/assets/icons/unmute.svg';
 
 const appStore = useAppStore();
 
-watch(
-  () => appStore.microphone?.frequencyData,
-  () => {
-    if (appStore.isLimitOver && !appStore.isMuted && !appStore.isThrottled) {
-      appStore.isThrottled = true;
-
-      appStore.play();
-
-      setTimeout(() => appStore.isThrottled = false, 5000);
-    }
-  }
-)
+const soundOptions = SOUNDS.map(sound => ({ title: sound, value: sound }))
 </script>
